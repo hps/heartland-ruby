@@ -1,10 +1,11 @@
 module Hps
 	class HpsCreditCard
 
-		attr_accessor :number, :cvv, :exp_month, :exp_year
-    
+		attr_accessor :number, :cvv, :exp_month,
+                  :exp_year, :card_present, :reader_present
+
     def initialize
-      
+
       @regex_map = {
         :Amex => /^3[47][0-9]{13}$/,
         :MasterCard => /^5[1-5][0-9]{14}$/,
@@ -14,19 +15,19 @@ module Hps
         :Discover => /^6(?:011|5[0-9]{2})[0-9]{12}$/,
         :Jcb => /^(?:2131|1800|35\\d{3})\\d{11}$/
       }
-      
+
     end
-    
+
     def card_type
-      
-      @regex_map.each { |key, value|         
+
+      @regex_map.each { |key, value|
         unless value.match(number.to_s).nil?
           return key
         end
       }
-      
+
       "Unknown"
-      
+
     end
 
 	end

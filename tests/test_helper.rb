@@ -4,10 +4,10 @@ require "rspec"
 
 module Hps
   module TestHelper
-  
+
     def self.configure_hps_module
       Hps.configure do |config|
-        config.service_uri = "https://posgateway.cert.secureexchange.net/Hps.Exchange.PosGateway/PosGatewayService.asmx?wsdl"
+        config.service_uri = "https://cert.api2.heartlandportico.com/Hps.Exchange.PosGateway/PosGatewayService.asmx?wsdl"
         config.user_name = "777700004035"
         config.password = "$Test1234"
         config.developer_id = 123456
@@ -15,20 +15,20 @@ module Hps
         config.license_id = 20855
         config.device_id = 1519321
         config.site_id = 20856
-        config.site_trace = "trace0001"          
-      end    
+        config.site_trace = "trace0001"
+      end
     end
-    
+
 
     def self.configure_hps_module_secret_key
       Hps.configure do |config|
         config.secret_api_key = "skapi_uat_MXZOAAC7LmEFVeOYGlVHe_WhvRf_UzWzJq5VJ8A-jA"
-      end    
+      end
     end
-    
+
     def self.configure_hps_module_for_certification
       Hps.configure do |config|
-        config.service_uri = "https://posgateway.cert.secureexchange.net/Hps.Exchange.PosGateway/PosGatewayService.asmx?wsdl"
+        config.service_uri = "https://cert.api2.heartlandportico.com/Hps.Exchange.PosGateway/PosGatewayService.asmx?wsdl"
         config.user_name = "777700005412"
         config.password = "$Test1234"
         config.developer_id = 123456
@@ -36,28 +36,28 @@ module Hps
         config.license_id = 20994
         config.device_id = 1522326
         config.site_id = 20995
-        config.site_trace = "trace0001"   
-      end    
+        config.site_trace = "trace0001"
+      end
     end
-  
+
     def self.charge_valid_amex(amount)
       TestHelper.configure_hps_module()
       service = Hps::HpsChargeService.new()
       service.charge(amount, "usd", TestData.valid_amex, TestData.valid_cardholder)
     end
-    
+
     def self.charge_valid_discover(amount)
       TestHelper.configure_hps_module()
       service = Hps::HpsChargeService.new()
       service.charge(amount, "usd", TestData.valid_discover, TestData.valid_cardholder)
     end
-    
+
     def self.charge_valid_mastercard(amount)
       TestHelper.configure_hps_module()
       service = Hps::HpsChargeService.new()
       service.charge(amount, "usd", TestData.valid_mastercard, TestData.valid_cardholder)
     end
-    
+
     def self.charge_valid_visa(amount)
       TestHelper.configure_hps_module()
       service = Hps::HpsChargeService.new()
@@ -100,9 +100,9 @@ module Hps
 
     def self.valid_multi_use_config
       Hps.configure do |config|
-        config.secret_api_key ='skapi_cert_MfBSAADtSBcAJQ9cYzNXr2nQRONdeylsOqnWHRi1_Q'
+        config.secret_api_key ='skapi_cert_MYl2AQAowiQAbLp5JesGKh7QFkcizOP2jcX9BrEMqQ'
       end
     end
-  
+
   end
 end
