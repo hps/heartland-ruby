@@ -87,7 +87,7 @@ module Hps
 
     def gateway_url_for_key(api_key)
 
-      gateway_url = "https://posgateway.secureexchange.net/Hps.Exchange.PosGateway/PosGatewayService.asmx?wsdl"
+      gateway_url = "https://api2.heartlandportico.com/Hps.Exchange.PosGateway/PosGatewayService.asmx?wsdl"
 
       if api_key.include? "_uat_"
 

@@ -19,7 +19,7 @@ module Hps
       end
 
       if components[1].downcase.eql? 'prod'
-        @url = 'https://api.heartlandportico.com/SecureSubmit.v1/api/token'
+        @url = 'https://api2.heartlandportico.com/SecureSubmit.v1/api/token'
       else
         @url = 'https://cert.api2.heartlandportico.com/Hps.Exchange.PosGateway.Hpf.v1/api/token'
       end
