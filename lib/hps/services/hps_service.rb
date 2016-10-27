@@ -37,7 +37,7 @@ module Hps
               xml.hps :Header do
                 if self.secret_api_key
                   self.service_uri = gateway_url_for_key self.secret_api_key
-                  xml.hps :SecretAPIKey, self.secret_api_key
+                  xml.hps :SecretAPIKey, self.secret_api_key.strip
                 else
             			xml.hps :UserName, self.user_name
             			xml.hps :Password, self.password

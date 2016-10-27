@@ -7,6 +7,14 @@ describe "General Tests" do
 		@service = Hps::HpsChargeService.new()
 	end
   
+  it "SecretAPIKey with spaces on Visa charge should return OK" do
+    Hps::TestHelper.configure_hps_module_secret_key_with_spaces
+	@service = Hps::HpsChargeService.new()
+    result = @service.charge(5, "usd", Hps::TestData::valid_visa, Hps::TestData::valid_cardholder)
+    expect(result.response_code).to eql("00")
+  end
+
+  
   it "charge when amount is less than zero should throw invalid request exception" do
     expect {
       @service.charge(-5, "usd", Hps::TestData::valid_visa, Hps::TestData::valid_cardholder) 
