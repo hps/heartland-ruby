@@ -49,7 +49,7 @@ module Hps
 
 				exceptions = HpsChargeExceptions.new()
 
-				if header_response_code != "0"
+				if header_response_code != "00"
 					message = response["Header"]["GatewayRspMsg"]
 					exceptions.hps_exception = @exception_mapper.map_gateway_exception(result.transaction_id, header_response_code, message)
 				end
@@ -123,7 +123,7 @@ module Hps
 						exceptions.hps_exception = @exception_mapper.map_gateway_exception(charge["GatewayTxnId"], gw_response_code, message)
 					end
 
-					if issuer_response_code != "0"
+					if issuer_response_code != "00"
 						message = charge["IssuerRspText"]
 						exceptions.card_exception = @exception_mapper.map_issuer_exception(charge["GatewayTxnId"], issuer_response_code, message)
 					end
