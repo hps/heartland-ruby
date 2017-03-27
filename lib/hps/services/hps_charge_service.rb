@@ -35,6 +35,7 @@ module Hps
       result.reference_number = detail["Data"]["RefNbr"]
       result.response_code = detail["Data"]["RspCode"]
       result.response_text = detail["Data"]["RspText"]
+      result.transaction_status = detail["Data"]["TxnStatus"]
 
 			tokenization_message = detail["Data"]["TokenizationMsg"]
 
