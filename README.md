@@ -15,6 +15,8 @@ This SDK makes it easy to integrate your Ruby application with Heartland's [**Po
 
 Supported Gateway Calls
 
+* CheckSale
+* CheckVoid
 * CreditAccountVerify (4.3)
 * CreditAddToBatch (4.4)
 * CreditAuth (4.5)

@@ -1,4 +1,5 @@
 require File.join( File.dirname(__FILE__), "test_data.rb" )
+require File.join( File.dirname(__FILE__), "test_check.rb" )
 require "hps"
 require "rspec"
 
@@ -25,13 +26,13 @@ module Hps
         config.secret_api_key = "skapi_uat_MXZOAAC7LmEFVeOYGlVHe_WhvRf_UzWzJq5VJ8A-jA"
       end
     end
-	
+
     def self.configure_hps_module_secret_key_with_spaces
       Hps.configure do |config|
         #config.service_uri = "https://cert.api2.heartlandportico.com/Hps.Exchange.PosGateway/PosGatewayService.asmx?wsdl"
         config.secret_api_key = "  skapi_cert_MYl2AQAowiQAbLp5JesGKh7QFkcizOP2jcX9BrEMqQ  "
       end
-    end	
+    end
 
     def self.configure_hps_module_for_certification
       Hps.configure do |config|
