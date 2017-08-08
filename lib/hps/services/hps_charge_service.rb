@@ -719,7 +719,7 @@ module Hps
         exception.response_text = response_text
         raise exception
 
-      elsif !response_code.eql? "00" && !response_code.eql? "0"
+      elsif !response_code.eql? "00" and !response_code.eql? "0"
 
         exception = @exception_mapper.map_issuer_exception(transaction_id, response_code, response_text)
         exception.response_code = response_code
