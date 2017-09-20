@@ -25,6 +25,7 @@ require "hps/entities/hps_transaction_header"
 require "hps/entities/hps_transaction_type"
 require "hps/entities/hps_transaction_details"
 require "hps/entities/hps_void"
+require "hps/entities/hps_gift_card"
 
 # Infrastructure
 require "hps/infrastructure/hps_sdk_codes"
