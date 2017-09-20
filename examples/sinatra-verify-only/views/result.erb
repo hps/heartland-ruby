@@ -1,0 +1,39 @@
+<!--[if IE]><![endif]-->
+<!--[if lt IE 7 ]> <html lang="en" class="ie6">    <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7">    <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8">    <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9">    <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html lang="en"><!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="SecureSubmit Ruby end-to-end payment example using tokenization.">
+    <meta name="author" content="Mark Hagan">
+    <title>Simple Payment Form Demo</title>
+
+    <link src="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row col-xs-12">
+        <h1>Ruby SecureSubmit Example</h1>
+    </div>
+
+    <h2>Results</h2>
+
+    <table>
+      <tr>
+        <td>Response Code</td>
+        <td><%= verification.response_code %>
+      </tr>
+      <tr>
+        <td>Multi-use Token</td>
+        <td><%= verification.token_data.token_value unless verification.token_data.nil? %>
+      </tr>
+    </table>
+</div>
+</body>
+</html>
