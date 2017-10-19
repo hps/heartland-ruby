@@ -435,6 +435,30 @@ module Hps
 
       submit_void(xml.target!)
     end
+
+    def update_token_expiration(token_value, exp_month, exp_year)
+      xml = Builder::XmlMarkup.new
+      xml.hps :Transaction do
+        xml.hps :ManageTokens do
+          xml.hps :TokenValue, token_value
+          xml.hps :TokenActions do
+            xml.hps :Set do
+              xml.hps :Attribute do
+                xml.hps :Name, "ExpMonth"
+                xml.hps :Value, format('%02d', exp_month)
+              end
+              xml.hps :Attribute do
+                xml.hps :Name, "ExpYear"
+                xml.hps :Value, exp_year
+              end
+            end
+          end
+        end
+      end
+
+      submit_manage_tokens(xml.target!)
+    end
+
     private
 
     def check_amount(amount)
@@ -665,6 +689,20 @@ module Hps
       end
 
       result = HpsVoid.new(hydrate_transaction_header(header))
+      result.transaction_id = header["GatewayTxnId"]
+      result.response_code = "00"
+      result.response_text = ""
+      result
+    end
+
+    def submit_manage_tokens(transaction)
+      response = doTransaction(transaction)
+      header = response["Header"]
+      unless header["GatewayRspCode"].eql? "0"
+        raise @exception_mapper.map_gateway_exception(header["GatewayTxnId"], header["GatewayRspCode"], header["GatewayRspMsg"])
+      end
+
+      result = HpsManageTokens.new(hydrate_transaction_header(header))
       result.transaction_id = header["GatewayTxnId"]
       result.response_code = "00"
       result.response_text = ""

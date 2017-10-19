@@ -29,6 +29,7 @@ require "hps/entities/hps_check"
 require "hps/entities/hps_check_holder"
 require "hps/entities/hps_check_response"
 require "hps/entities/hps_check_response_details"
+require "hps/entities/hps_manage_tokens"
 
 # Infrastructure
 require "hps/infrastructure/hps_sdk_codes"
