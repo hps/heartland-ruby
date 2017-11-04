@@ -19,6 +19,7 @@ module Hps
           end
         end
       end
+      submit_transaction(xml.target!, txn_type)
     end # balance
 
     private
@@ -44,17 +45,58 @@ module Hps
         end
       end # hydrate_gift_card_data
 
-    # public function _hydrateEncryptionData(HpsEncryptionData $encryptionData, DOMDocument $xml)
-    # {
-    #     $encData = $xml->createElement('hps:EncryptionData');
-    #     if ($encryptionData->encryptedTrackNumber != null) {
-    #         $encData->appendChild($xml->createElement('hps:EncryptedTrackNumber', $encryptionData->encryptedTrackNumber));
-    #     }
-    #     $encData->appendChild($xml->createElement('hps:KSN', $encryptionData->ksn));
-    #     $encData->appendChild($xml->createElement('hps:KTB', $encryptionData->ktb));
-    #     $encData->appendChild($xml->createElement('hps:Version', $encryptionData->version));
-    #     return $encData;
-    # }
+    def hydrate_encryption_data(encryption_data, xml)
+      xml.hps :EncryptionData do
+        if encryption_data.encrypted_track_number
+          xml.hps :EncryptedTrackNumber, encryption_data.encrypted_track_number
+        end
+        xml.hps :KSN, encryption_data.ksn
+        xml.hps :KTB, encryption_data.ktb
+        xml.hps :Version, encryption_data.version
+      end
+    end # hydrate_encryption_data
+
+    def submit_transaction(transaction, txn_type, client_txn_id = nil)
+        options = {}
+        if client_txn_id
+          # The PHP lib inserts the client_txn_id into the header in the doRequest method
+          # TODO: Decide if this step is needed
+          options['clientTransactionId'] = client_txn_id
+        end
+
+        response = doTransaction(transaction)
+        header = response['Header']
+
+        if !header["GatewayRspCode"].eql? "0"
+          raise @exception_mapper.map_gateway_exception(header["GatewayTxnId"], header["GatewayRspCode"], header["GatewayRspMsg"])
+        end
+
+        rvalue = ''
+        case txn_type
+          when 'GiftCardActivate'
+            rvalue = HpsGiftCardActivate::from_response(response, txn_type)
+          when 'GiftCardAddValue'
+            rvalue = HpsGiftCardAddValue::from_response(response, txn_type)
+          when 'GiftCardAlias'
+            rvalue = HpsGiftCardAlias::from_response(response, txn_type)
+          when 'GiftCardBalance'
+            rvalue = HpsGiftCardBalance::from_response(response, txn_type)
+          when 'GiftCardDeactivate'
+            rvalue = HpsGiftCardDeactivate::from_response(response, txn_type)
+          when 'GiftCardReplace'
+            rvalue = HpsGiftCardReplace::from_response(response, txn_type)
+          when 'GiftCardReward'
+            rvalue = HpsGiftCardReward::from_response(response, txn_type)
+          when 'GiftCardSale'
+            rvalue = HpsGiftCardSale::from_response(response, txn_type)
+          when 'GiftCardVoid'
+            rvalue = HpsGiftCardVoid::from_response(response, txn_type)
+          when 'GiftCardReversal'
+            rvalue = HpsGiftCardReversal::from_response(response, txn_type)
+        end
+
+        return rvalue;
+    end # submit_transaction
 
   end # HpsGiftCardService
 end # Hps

@@ -111,5 +111,13 @@ module Hps
       end
     end
 
+    #  =============
+    #  = Giftcards =
+    #  =============
+    def self.balance_valid_gift_card
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.balance( TestData.valid_gift_card_not_encrypted )
+    end # balance_valid_gift_card
   end
 end
