@@ -41,6 +41,7 @@ require "hps/infrastructure/hps_track_data_method"
 require "hps/services/hps_service"
 require "hps/services/hps_charge_service"
 require "hps/services/hps_batch_service"
+require "hps/services/hps_gift_card_service"
 
 module Hps
 
