@@ -119,5 +119,17 @@ module Hps
       service = Hps::HpsGiftCardService.new
       service.balance( TestData.valid_gift_card_not_encrypted )
     end # balance_valid_gift_card
+
+    def self.activate_valid_gift_card(amount)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.activate( amount, 'USD', TestData.valid_gift_card_not_encrypted )
+    end # activate_valid_gift_card
+
+    def self.add_value_to_valid_gift_card(amount)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.add_value( amount, 'USD', TestData.valid_gift_card_not_encrypted )
+    end # activate_valid_gift_card
   end
 end
