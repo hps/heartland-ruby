@@ -69,6 +69,45 @@ module Hps
       submit_transaction(xml.target!, txn_type)
     end # balance
 
+    def deactivate(giftcard)
+      txn_type = "GiftCardDeactivate"
+
+      xml = Builder::XmlMarkup.new
+      xml.hps :Transaction do
+        xml.hps txn_type.to_sym do
+          xml.hps :Block1 do
+
+            if giftcard.is_a? HpsTokenData
+              card_data = HpsGiftCard.new
+              card_data.token_value = giftcard.token_value
+            else
+              card_data = giftcard
+            end
+
+            hydrate_gift_card_data(giftcard, xml)
+          end
+        end
+      end
+      submit_transaction(xml.target!, txn_type)
+    end # deactivate
+
+    def replace(old_card, new_card)
+      txn_type = "GiftCardReplace"
+
+      xml = Builder::XmlMarkup.new
+      xml.hps :Transaction do
+        xml.hps txn_type.to_sym do
+          xml.hps :Block1 do
+
+            hydrate_gift_card_data(old_card, xml, 'OldCardData')
+            hydrate_gift_card_data(new_card, xml, 'NewCardData')
+
+          end
+        end
+      end
+      submit_transaction(xml.target!, txn_type)
+    end # replace
+
     private
       def hydrate_gift_card_data(gift_card, xml, element_name = 'CardData')
         xml.hps element_name.to_sym do
