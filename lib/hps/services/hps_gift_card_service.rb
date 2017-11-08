@@ -25,6 +25,7 @@ module Hps
     end # activate
 
     def add_value(amount, currency, giftcard)
+      # TODO: Validate currency and amount?
       txn_type = "GiftCardAddValue"
 
       xml = Builder::XmlMarkup.new
@@ -107,6 +108,43 @@ module Hps
       end
       submit_transaction(xml.target!, txn_type)
     end # replace
+
+    def reward(giftcard, amount, currency = "USD", gratuity = nil, tax = nil)
+      # TODO: Validate currency and amount?
+      txn_type = "GiftCardReward"
+
+      xml = Builder::XmlMarkup.new
+      xml.hps :Transaction do
+        xml.hps txn_type.to_sym do
+          xml.hps :Block1 do
+            xml.hps :Amt, amount
+
+            if giftcard.is_a? HpsTokenData
+              card_data = HpsGiftCard.new
+              card_data.token_value = giftcard.token_value
+            else
+              card_data = giftcard
+            end
+
+            hydrate_gift_card_data(giftcard, xml)
+
+            if ["USD", "POINTS"].include? currency.upcase
+              xml.hps :Currency, currency.upcase
+            end
+
+            if gratuity
+              xml.hps :GratuityAmtInfo, gratuity
+            end
+
+            if tax
+              xml.hps :TaxAmtInfo, tax
+            end
+
+          end
+        end
+      end
+      submit_transaction(xml.target!, txn_type)
+    end # reward
 
     private
       def hydrate_gift_card_data(gift_card, xml, element_name = 'CardData')

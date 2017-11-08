@@ -32,4 +32,12 @@ describe "Giftcard Tests" do
     expect( response.response_code ).to eql("0")
   end
 
+  # Add rewards to a card
+  it "When card is ok, it should add rewards and return a valid response" do
+    ["USD", "POINTS"].each do |currency|
+      response = Hps::TestHelper.reward_valid_gift_card(10, currency)
+      expect( response.response_code ).to eql("0")
+    end
+  end
+
 end # Giftcard Tests

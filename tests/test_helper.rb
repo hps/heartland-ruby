@@ -143,5 +143,11 @@ module Hps
       service = Hps::HpsGiftCardService.new
       service.replace( TestData.valid_gift_card_not_encrypted, TestData.valid_gift_card_not_encrypted )
     end # replace_valid_gift_card
+
+    def self.reward_valid_gift_card(amount, currency = "USD", gratuity = nil, tax = nil)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.reward( TestData.valid_gift_card_not_encrypted, amount, 'USD', gratuity, tax )
+    end # reward_valid_gift_card
   end
 end
