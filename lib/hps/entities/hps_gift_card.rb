@@ -27,10 +27,10 @@ module Hps
     # special rewards or promotions available on their account
     attr_accessor :notes
 
-    def self.from_response(response, txn_type)
+    def self.from_response(response, txn_type, return_type = nil)
       activation_response = response['Transaction'][txn_type]
 
-      activation = self.new
+      activation = return_type ? return_type.constantize.new : self.new
 
       activation.transaction_id = response['Header']['GatewayTxnId']
       activation.authorization_code = activation_response['AuthCode']
@@ -102,8 +102,9 @@ module Hps
 
     def self.from_response(response, txn_type)
       transaction = response['Transaction']
+      
+      sale = self.superclass.from_response(response, txn_type, self.name)
 
-      sale = self.parent.from_response(response, txn_type)
       sale.split_tender_card_amount = transaction['SplitTenderCardAmt']
       sale.split_tender_balance_due = transaction['SplitTenderBalanceDueAmt']
 
@@ -118,7 +119,7 @@ module Hps
     attr_accessor :gift_card
 
     def self.from_response(response, txn_type)
-      alias_response = response['Transaction']['txn_type']
+      alias_response = response['Transaction'][txn_type]
 
       alias_item = HpsGiftCardAlias.new
       alias_item.transaction_id = response['Header']['GatewayTxnId']

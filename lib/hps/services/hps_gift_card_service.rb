@@ -146,6 +146,82 @@ module Hps
       submit_transaction(xml.target!, txn_type)
     end # reward
 
+    def sale(giftcard, amount, currency = "USD", gratuity = nil, tax = nil)
+      # TODO: Validate currency and amount?
+      txn_type = "GiftCardSale"
+
+      xml = Builder::XmlMarkup.new
+      xml.hps :Transaction do
+        xml.hps txn_type.to_sym do
+          xml.hps :Block1 do
+            xml.hps :Amt, amount
+
+            if giftcard.is_a? HpsTokenData
+              card_data = HpsGiftCard.new
+              card_data.token_value = giftcard.token_value
+            else
+              card_data = giftcard
+            end
+
+            hydrate_gift_card_data(giftcard, xml)
+
+            if ["USD", "POINTS"].include? currency.upcase
+              xml.hps :Currency, currency.upcase
+            end
+
+            if gratuity
+              xml.hps :GratuityAmtInfo, gratuity
+            end
+
+            if tax
+              xml.hps :TaxAmtInfo, tax
+            end
+
+          end
+        end
+      end
+      submit_transaction(xml.target!, txn_type)
+    end # sale
+
+    def void(txn_id)
+      txn_type = "GiftCardVoid"
+
+      xml = Builder::XmlMarkup.new
+      xml.hps :Transaction do
+        xml.hps txn_type.to_sym do
+          xml.hps :Block1 do
+            xml.hps :GatewayTxnId, txn_id
+          end
+        end
+      end
+      submit_transaction(xml.target!, txn_type)
+    end # void
+
+    def reverse(giftcard, amount)
+      # TODO: Validate currency and amount?
+      txn_type = "GiftCardReversal"
+
+      xml = Builder::XmlMarkup.new
+      xml.hps :Transaction do
+        xml.hps txn_type.to_sym do
+          xml.hps :Block1 do
+            xml.hps :Amt, amount
+
+            if giftcard.is_a? HpsTokenData
+              xml.hps :TokenValue, giftcard.token_value
+            elsif giftcard.is_a? HpsGiftCard
+              card_data = giftcard
+              hydrate_gift_card_data(card_data, xml)
+            else
+              xml.hps :GatewayTxnId, giftcard
+            end
+
+          end
+        end
+      end
+      submit_transaction(xml.target!, txn_type)
+    end # reverse
+
     private
       def hydrate_gift_card_data(gift_card, xml, element_name = 'CardData')
         xml.hps element_name.to_sym do

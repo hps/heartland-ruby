@@ -129,8 +129,9 @@ module Hps
     #  =============
     TEST_CARD_NUMBERS = (6277200000000001..6277200000000099)
     
-    def self.valid_gift_card_not_encrypted
-      HpsGiftCard.new(Random.rand(TEST_CARD_NUMBERS))
+    def self.valid_gift_card_not_encrypted(random = true)
+      return HpsGiftCard.new(Random.rand(TEST_CARD_NUMBERS)) if random
+      return HpsGiftCard.new(TEST_CARD_NUMBERS.first) if !random
     end # valid_gift_card_not_encrypted
   
   end

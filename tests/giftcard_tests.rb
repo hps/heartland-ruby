@@ -40,4 +40,34 @@ describe "Giftcard Tests" do
     end
   end
 
+  # Complete a sale
+  it "When card is ok, it should complete a sale and return a valid response" do
+    response = Hps::TestHelper.sale_valid_gift_card(10)
+    expect( response.response_code ).to eql("0")
+  end
+
+  # Void a transaction
+  it "Should void a transaction" do
+    response = Hps::TestHelper.sale_valid_gift_card(10)
+    expect( response.response_code ).to eql("0")
+    void_response = Hps::TestHelper.void_gift_card_sale( response.transaction_id )
+    expect( void_response.response_code ).to eql("0")
+  end
+
+  # Reverse a transaction using transaction id
+  it "Should reverse a gift card transaction using the transaction id" do
+    response = Hps::TestHelper.sale_valid_gift_card(10)
+    expect( response.response_code ).to eql("0")
+    reverse_response = Hps::TestHelper.reverse_gift_card_sale( 10, response.transaction_id )
+    expect( reverse_response.response_code ).to eql("0")
+  end
+
+  # Reverse transaction using giftcard
+  it "Should reverse a giftcard transaction using the card" do
+    response = Hps::TestHelper.sale_valid_gift_card(10, "USD", nil, nil, false)
+    expect( response.response_code ).to eql("0")
+    reverse_response = Hps::TestHelper.reverse_gift_card_sale(10)
+    expect( reverse_response.response_code ).to eql("0")
+  end
+
 end # Giftcard Tests

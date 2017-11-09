@@ -149,5 +149,29 @@ module Hps
       service = Hps::HpsGiftCardService.new
       service.reward( TestData.valid_gift_card_not_encrypted, amount, 'USD', gratuity, tax )
     end # reward_valid_gift_card
+
+    def self.sale_valid_gift_card(amount, currency = "USD", gratuity = nil, tax = nil, random_card = true)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.sale( TestData.valid_gift_card_not_encrypted(random_card), amount, currency, gratuity, tax)
+    end # sale_valid_gift_card
+
+    def self.void_gift_card_sale(txn_id)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.void( txn_id )
+    end # void_gift_card_sale
+
+    def self.reverse_gift_card_sale(amount, txn_id = TestData.valid_gift_card_not_encrypted(false))
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.reverse( txn_id, amount )
+    end # reverse_gift_card_sale
+
+    def self.gift_card_sale_with_invalid_pin
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.sale( TestData.valid_gift_card_not_encrypted, 3.05 )
+    end # gift_card_sale_with_invaid_pin
   end
 end
