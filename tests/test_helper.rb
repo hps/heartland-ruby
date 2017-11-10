@@ -168,10 +168,11 @@ module Hps
       service.reverse( txn_id, amount )
     end # reverse_gift_card_sale
 
-    def self.gift_card_sale_with_invalid_pin
+    # Testing exceptions from transactions
+    def self.gift_card_transaction_exception(amount)
       TestHelper.valid_multi_use_config
       service = Hps::HpsGiftCardService.new
-      service.sale( TestData.valid_gift_card_not_encrypted, 3.05 )
+      service.sale( TestData.valid_gift_card_not_encrypted, amount )
     end # gift_card_sale_with_invaid_pin
   end
 end

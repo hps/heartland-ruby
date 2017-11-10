@@ -265,7 +265,13 @@ module Hps
         end
 
         response = doTransaction(transaction)
+
         header = response['Header']
+        transaction_response = response["Transaction"][txn_type]
+
+        if !transaction_response["RspCode"].eql? "0"
+          raise @exception_mapper.map_gift_card_exception(header["GatewayTxnId"], transaction_response["RspCode"], transaction_response["RspText"])
+        end
 
         if !header["GatewayRspCode"].eql? "0"
           raise @exception_mapper.map_gateway_exception(header["GatewayTxnId"], header["GatewayRspCode"], header["GatewayRspMsg"])
