@@ -1,7 +1,7 @@
 module Hps
   class HpsGiftCardService < HpsService
-    def activate(amount, currency, giftcard)
-      # TODO: Validate currency and amount?
+    def activate(giftcard, amount, currency = "USD")
+      HpsInputValidation.check_amount(amount)
       txn_type = "GiftCardActivate"
 
       xml = Builder::XmlMarkup.new
@@ -24,8 +24,8 @@ module Hps
       submit_transaction(xml.target!, txn_type)
     end # activate
 
-    def add_value(amount, currency, giftcard)
-      # TODO: Validate currency and amount?
+    def add_value(giftcard, amount, currency = "USD")
+      HpsInputValidation.check_amount(amount)
       txn_type = "GiftCardAddValue"
 
       xml = Builder::XmlMarkup.new
@@ -110,7 +110,7 @@ module Hps
     end # replace
 
     def reward(giftcard, amount, currency = "USD", gratuity = nil, tax = nil)
-      # TODO: Validate currency and amount?
+      HpsInputValidation.check_amount(amount)
       txn_type = "GiftCardReward"
 
       xml = Builder::XmlMarkup.new
@@ -147,7 +147,7 @@ module Hps
     end # reward
 
     def sale(giftcard, amount, currency = "USD", gratuity = nil, tax = nil)
-      # TODO: Validate currency and amount?
+      HpsInputValidation.check_amount(amount)
       txn_type = "GiftCardSale"
 
       xml = Builder::XmlMarkup.new
@@ -198,7 +198,7 @@ module Hps
     end # void
 
     def reverse(giftcard, amount)
-      # TODO: Validate currency and amount?
+      HpsInputValidation.check_amount(amount)
       txn_type = "GiftCardReversal"
 
       xml = Builder::XmlMarkup.new
@@ -257,14 +257,7 @@ module Hps
     end # hydrate_encryption_data
 
     def submit_transaction(transaction, txn_type, client_txn_id = nil)
-        options = {}
-        if client_txn_id
-          # The PHP lib inserts the client_txn_id into the header in the doRequest method
-          # TODO: Decide if this step is needed
-          options['clientTransactionId'] = client_txn_id
-        end
-
-        response = doTransaction(transaction)
+        response = doTransaction(transaction, client_txn_id)
 
         header = response['Header']
         transaction_response = response["Transaction"][txn_type]

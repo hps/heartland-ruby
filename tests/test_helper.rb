@@ -124,13 +124,13 @@ module Hps
     def self.activate_valid_gift_card(amount)
       TestHelper.valid_multi_use_config
       service = Hps::HpsGiftCardService.new
-      service.activate( amount, 'USD', TestData.valid_gift_card_not_encrypted )
+      service.activate( TestData.valid_gift_card_not_encrypted, amount, 'USD' )
     end # activate_valid_gift_card
 
     def self.add_value_to_valid_gift_card(amount)
       TestHelper.valid_multi_use_config
       service = Hps::HpsGiftCardService.new
-      service.add_value( amount, 'USD', TestData.valid_gift_card_not_encrypted )
+      service.add_value( TestData.valid_gift_card_not_encrypted, amount, 'USD' )
     end # add_value_to_valid_gift_card
 
     def self.deactivate_valid_gift_card
@@ -170,10 +170,10 @@ module Hps
     end # reverse_gift_card_sale
 
     # Testing exceptions from transactions
-    def self.gift_card_transaction_exception(amount)
+    def self.gift_card_transaction_exception(amount, method = :sale)
       TestHelper.valid_multi_use_config
       service = Hps::HpsGiftCardService.new
-      service.sale( TestData.valid_gift_card_not_encrypted, amount )
+      service.send(method, TestData.valid_gift_card_not_encrypted, amount )
     end # gift_card_sale_with_invaid_pin
   end
 end

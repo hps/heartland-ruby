@@ -35,20 +35,20 @@ describe "Giftcard Tests" do
   # Add rewards to a card
   it "When card is ok, it should add rewards and return a valid response" do
     ["USD", "POINTS"].each do |currency|
-      response = Hps::TestHelper.reward_valid_gift_card(10, currency)
+      response = Hps::TestHelper.reward_valid_gift_card(10.00, currency)
       expect( response.response_code ).to eql("0")
     end
   end
 
   # Complete a sale
   it "When card is ok, it should complete a sale and return a valid response" do
-    response = Hps::TestHelper.sale_valid_gift_card(10)
+    response = Hps::TestHelper.sale_valid_gift_card(10.00)
     expect( response.response_code ).to eql("0")
   end
 
   # Void a transaction
   it "Should void a transaction" do
-    response = Hps::TestHelper.sale_valid_gift_card(10)
+    response = Hps::TestHelper.sale_valid_gift_card(10.00)
     expect( response.response_code ).to eql("0")
     void_response = Hps::TestHelper.void_gift_card_sale( response.transaction_id )
     expect( void_response.response_code ).to eql("0")
@@ -56,23 +56,33 @@ describe "Giftcard Tests" do
 
   # Reverse a transaction using transaction id
   it "Should reverse a gift card transaction using the transaction id" do
-    response = Hps::TestHelper.sale_valid_gift_card(10)
+    response = Hps::TestHelper.sale_valid_gift_card(10.00)
     expect( response.response_code ).to eql("0")
-    reverse_response = Hps::TestHelper.reverse_gift_card_sale( 10, response.transaction_id )
+    reverse_response = Hps::TestHelper.reverse_gift_card_sale( 10.00, response.transaction_id )
     expect( reverse_response.response_code ).to eql("0")
   end
 
   # Reverse transaction using giftcard
   it "Should reverse a giftcard transaction using the card" do
-    response = Hps::TestHelper.sale_valid_gift_card(10, "USD", nil, nil, false)
+    response = Hps::TestHelper.sale_valid_gift_card(10.00, "USD", nil, nil, false)
     expect( response.response_code ).to eql("0")
-    reverse_response = Hps::TestHelper.reverse_gift_card_sale(10)
+    reverse_response = Hps::TestHelper.reverse_gift_card_sale(10.00)
     expect( reverse_response.response_code ).to eql("0")
   end
 
   context "exceptions for transactions" do
     before(:all) do
       @mapper = Hps::ExceptionMapper.new
+    end
+
+    # Amounts less than zero
+    it "raises an exception for amounts less than zero" do
+      %i{activate add_value reward sale reverse}.each do |method|
+        expect{ Hps::TestHelper.gift_card_transaction_exception(-1.00, method) }.to raise_exception{|e|
+          expect(e).to be_a( Hps::InvalidRequestException )
+          expect(e.message).to eql("Amount must be greater than or equal 0.")
+        }
+      end
     end
 
     # Profile auth fails
