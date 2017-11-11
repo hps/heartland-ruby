@@ -6,30 +6,35 @@ describe "Giftcard Tests" do
   it "When card is ok, it should activate and return valid response" do
     response = Hps::TestHelper.activate_valid_gift_card(100.00)
     expect( response.response_code ).to eql("0")
+    expect( response ).to be_a(Hps::HpsGiftCardActivate)
   end
 
   # Add value to a card
   it "When card is ok, it should add value and return a valid response" do
     response = Hps::TestHelper.add_value_to_valid_gift_card(100.00)
     expect( response.response_code ).to eql("0")
+    expect( response ).to be_a(Hps::HpsGiftCardAddValue)
   end
 
   # Check the balance on a card
   it "When card is ok, it should return valid response" do
     response = Hps::TestHelper.balance_valid_gift_card
     expect( response.response_code ).to eql("0")
+    expect( response ).to be_a(Hps::HpsGiftCardBalance)
   end
 
   # Deactivate a card
   it "When card is ok, it should deactivate and return a valid response" do
     response = Hps::TestHelper.deactivate_valid_gift_card
     expect( response.response_code ).to eql("0")
+    expect( response ).to be_a(Hps::HpsGiftCardDeactivate)
   end
 
   # Replace a card
   it "When card is ok, it should replace it and return a valid response" do
     response = Hps::TestHelper.replace_valid_gift_card
     expect( response.response_code ).to eql("0")
+    expect( response ).to be_a(Hps::HpsGiftCardReplace)
   end
 
   # Add rewards to a card
@@ -37,6 +42,7 @@ describe "Giftcard Tests" do
     ["USD", "POINTS"].each do |currency|
       response = Hps::TestHelper.reward_valid_gift_card(10.00, currency)
       expect( response.response_code ).to eql("0")
+      expect( response ).to be_a(Hps::HpsGiftCardReward)
     end
   end
 
@@ -44,6 +50,7 @@ describe "Giftcard Tests" do
   it "When card is ok, it should complete a sale and return a valid response" do
     response = Hps::TestHelper.sale_valid_gift_card(10.00)
     expect( response.response_code ).to eql("0")
+    expect( response ).to be_a(Hps::HpsGiftCardSale)
   end
 
   # Void a transaction
@@ -52,6 +59,7 @@ describe "Giftcard Tests" do
     expect( response.response_code ).to eql("0")
     void_response = Hps::TestHelper.void_gift_card_sale( response.transaction_id )
     expect( void_response.response_code ).to eql("0")
+    expect( void_response ).to be_a(Hps::HpsGiftCardVoid)
   end
 
   # Reverse a transaction using transaction id
@@ -60,6 +68,7 @@ describe "Giftcard Tests" do
     expect( response.response_code ).to eql("0")
     reverse_response = Hps::TestHelper.reverse_gift_card_sale( 10.00, response.transaction_id )
     expect( reverse_response.response_code ).to eql("0")
+    expect( reverse_response ).to be_a(Hps::HpsGiftCardReversal)
   end
 
   # Reverse transaction using giftcard
@@ -68,6 +77,7 @@ describe "Giftcard Tests" do
     expect( response.response_code ).to eql("0")
     reverse_response = Hps::TestHelper.reverse_gift_card_sale(10.00)
     expect( reverse_response.response_code ).to eql("0")
+    expect( reverse_response ).to be_a(Hps::HpsGiftCardReversal)
   end
 
   context "exceptions for transactions" do
