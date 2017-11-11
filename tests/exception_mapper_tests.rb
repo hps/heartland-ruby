@@ -9,7 +9,7 @@ describe "ExceptionMapper Tests" do
 
 
 	it "mapping version number accessible" do
-		expect(@mapper.version_number).to eq("1.0.0")
+		expect(@mapper.version_number).to eq("1.0.1")
 	end	
 
 	# Issuer Exceptions
@@ -229,6 +229,74 @@ describe "ExceptionMapper Tests" do
 		expect(result.code).to eq("processing_error")
 		expect(result.message).to eq(message_for_code("Exception_Message_ProcessingError"))			
 	end	
+
+	# GiftCards
+	context "Gift card exception mapper" do
+
+		it "unknown gift card error" do
+			%w(1 2 11).each do |n|
+				result = @mapper.map_gift_card_exception(12345, n, "Response Text")
+				expect( result.code ).to eql("unknown_card_exception")
+				expect( result.message ).to eql("Response Text")
+			end
+		end
+
+		it "invalid card data" do
+			%w(3 8).each do |n|
+				result = @mapper.map_gift_card_exception(12345, n, "Response Text")
+				expect( result.code ).to eql("invalid_card_data")
+				expect( result.message ).to eql(message_for_code("Exception_Message_InvalidCardData"))
+			end
+		end
+
+		it "expired card error" do
+			%w(4).each do |n|
+				result = @mapper.map_gift_card_exception(12345, n, "Response Text")
+				expect( result.code ).to eql("expired_card")
+				expect( result.message ).to eql(message_for_code("Exception_Message_CardExpired"))
+			end
+		end
+
+		it "declined card error" do
+			%w(5 12).each do |n|
+				result = @mapper.map_gift_card_exception(12345, n, "Response Text")
+				expect( result.code ).to eql("card_declined")
+				expect( result.message ).to eql(message_for_code("Exception_Message_CardDeclined"))
+			end
+		end
+
+		it "processing error" do
+			%w(6 7 10).each do |n|
+				result = @mapper.map_gift_card_exception(12345, n, "Response Text")
+				expect( result.code ).to eql("processing_error")
+				expect( result.message ).to eql(message_for_code("Exception_Message_ProcessingError"))
+			end
+		end
+
+		it "invalid amount error" do
+			%w(9).each do |n|
+				result = @mapper.map_gift_card_exception(12345, n, "Response Text")
+				expect( result.code ).to eql("invalid_amount")
+				expect( result.message ).to eql(message_for_code("Exception_Message_ChargeAmount"))
+			end
+		end
+
+		it "partial approval error" do
+			%w(13).each do |n|
+				result = @mapper.map_gift_card_exception(12345, n, "Response Text")
+				expect( result.code ).to eql("partial_approval")
+				expect( result.message ).to eql(message_for_code("Exception_Message_PartialApproval"))
+			end
+		end
+
+		it "invalid pin error" do
+			%w(14).each do |n|
+				result = @mapper.map_gift_card_exception(12345, n, "Response Text")
+				expect( result.code ).to eql("invalid_pin")
+				expect( result.message ).to eql(message_for_code("Exception_Message_InvalidPin"))
+			end
+		end
+	end
 
 	# Helper methods
 

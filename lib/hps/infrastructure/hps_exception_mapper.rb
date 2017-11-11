@@ -31,6 +31,17 @@ module Hps
 
 		end
 
+		def map_gift_card_exception(transaction_id, response_code, response_text)
+			mapping = exception_for_category_and_code("gift", response_code)
+			unless mapping.nil?
+				message = message_for_mapping(mapping, response_text)
+				code = mapping["mapping_code"]
+				return CardException.new(transaction_id, code, message)
+			else
+				return CardException.new(transaction_id, "unknown_card_exception", response_text)
+			end
+		end
+
 		def map_gateway_exception(transaction_id, response_code, response_text)
 
 			mapping = exception_for_category_and_code("gateway", response_code)

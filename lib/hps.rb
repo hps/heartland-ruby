@@ -30,6 +30,7 @@ require "hps/entities/hps_check_holder"
 require "hps/entities/hps_check_response"
 require "hps/entities/hps_check_response_details"
 require "hps/entities/hps_manage_tokens"
+require "hps/entities/hps_gift_card"
 
 # Infrastructure
 require "hps/infrastructure/hps_sdk_codes"
@@ -53,6 +54,7 @@ require "hps/services/hps_service"
 require "hps/services/hps_charge_service"
 require "hps/services/hps_check_service"
 require "hps/services/hps_batch_service"
+require "hps/services/hps_gift_card_service"
 
 module Hps
 
