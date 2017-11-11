@@ -1,11 +1,11 @@
 module Hps
-	class HpsChargeService < HpsService
+  class HpsChargeService < HpsService
 
-		def get(transaction_id)
+    def get(transaction_id)
 
-			if transaction_id.nil? or transaction_id == 0
-				raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_transaction_id)
-			end
+      if transaction_id.nil? or transaction_id == 0
+        raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_transaction_id)
+      end
 
       xml = Builder::XmlMarkup.new
       xml.hps :Transaction do
@@ -14,65 +14,65 @@ module Hps
         end
       end
 
-			response = doTransaction(xml.target!)
+      response = doTransaction(xml.target!)
       detail = response["Transaction"]["ReportTxnDetail"]
 
-			header = hydrate_transaction_header(response["Header"])
-			result = HpsReportTransactionDetails.new(header)
-			result.transaction_id = detail["GatewayTxnId"]
-			result.original_transaction_id = detail["OriginalGatewayTxnId"]
-			result.authorized_amount = detail["Data"]["AuthAmt"]
-			result.authorization_code = detail["Data"]["AuthCode"]
-			result.avs_result_code = detail["Data"]["AVSRsltCode"]
-			result.avs_result_text = detail["Data"]["AVSRsltText"]
-			result.card_type = detail["Data"]["CardType"]
-			result.masked_card_number = detail["Data"]["MaskedCardNbr"]
-			result.transaction_type = Hps.service_name_to_transaction_type(detail["ServiceName"])
-			result.transaction_date = detail["RspUtcDT"]
-			result.cpc_indicator = detail["Data"]["CPCInd"]
-			result.cvv_result_code = detail["Data"]["CVVRsltCode"]
-			result.cvv_result_text = detail["Data"]["CVVRsltText"]
+      header = hydrate_transaction_header(response["Header"])
+      result = HpsReportTransactionDetails.new(header)
+      result.transaction_id = detail["GatewayTxnId"]
+      result.original_transaction_id = detail["OriginalGatewayTxnId"]
+      result.authorized_amount = detail["Data"]["AuthAmt"]
+      result.authorization_code = detail["Data"]["AuthCode"]
+      result.avs_result_code = detail["Data"]["AVSRsltCode"]
+      result.avs_result_text = detail["Data"]["AVSRsltText"]
+      result.card_type = detail["Data"]["CardType"]
+      result.masked_card_number = detail["Data"]["MaskedCardNbr"]
+      result.transaction_type = Hps.service_name_to_transaction_type(detail["ServiceName"])
+      result.transaction_date = detail["RspUtcDT"]
+      result.cpc_indicator = detail["Data"]["CPCInd"]
+      result.cvv_result_code = detail["Data"]["CVVRsltCode"]
+      result.cvv_result_text = detail["Data"]["CVVRsltText"]
       result.reference_number = detail["Data"]["RefNbr"]
       result.response_code = detail["Data"]["RspCode"]
       result.response_text = detail["Data"]["RspText"]
 
-			tokenization_message = detail["Data"]["TokenizationMsg"]
+      tokenization_message = detail["Data"]["TokenizationMsg"]
 
-			unless tokenization_message.nil?
-				result.token_data = HpsTokenData.new(tokenization_message)
-			end
+      unless tokenization_message.nil?
+        result.token_data = HpsTokenData.new(tokenization_message)
+      end
 
-			header_response_code = response["Header"]["GatewayRspCode"]
-			data_response_code = detail["Data"]["RspCode"]
+      header_response_code = response["Header"]["GatewayRspCode"]
+      data_response_code = detail["Data"]["RspCode"]
 
-			if header_response_code != "0" or data_response_code != "00"
+      if header_response_code != "0" or data_response_code != "0" or data_response_code != "00"
 
-				exceptions = HpsChargeExceptions.new()
+        exceptions = HpsChargeExceptions.new()
 
-				if header_response_code != "00"
-					message = response["Header"]["GatewayRspMsg"]
-					exceptions.hps_exception = @exception_mapper.map_gateway_exception(result.transaction_id, header_response_code, message)
-				end
+        if header_response_code != "0"
+          message = response["Header"]["GatewayRspMsg"]
+          exceptions.hps_exception = @exception_mapper.map_gateway_exception(result.transaction_id, header_response_code, message)
+        end
 
-				if data_response_code != "0"
-					message = detail["Data"]["RspText"]
-					exceptions.card_exception = @exception_mapper.map_issuer_exception(transaction_id, data_response_code, message)
-				end
+        if data_response_code != "0" || data_response_code != "00"
+          message = detail["Data"]["RspText"]
+          exceptions.card_exception = @exception_mapper.map_issuer_exception(transaction_id, data_response_code, message)
+        end
 
-				result.exceptions = exceptions
+        result.exceptions = exceptions
 
-			end
+      end
 
-			result
+      result
 
-		end
+    end
 
-		def list(start_date, end_date, filter_by = nil)
+    def list(start_date, end_date, filter_by = nil)
 
       if start_date > DateTime.now
-				raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_start_date)
+        raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_start_date)
       elsif end_date > DateTime.now
-				raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_end_date)
+        raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_end_date)
       end
 
       xml = Builder::XmlMarkup.new
@@ -83,62 +83,62 @@ module Hps
         end
       end
 
-			response = doTransaction(xml.target!)
+      response = doTransaction(xml.target!)
 
-			# Gateway exception
-			if response["Header"]["GatewayRspCode"] != "0"
-				transaction_id = response["Header"]["GatewayTxnId"]
-				response_code = response["Header"]["GatewayRspCode"]
-				response_message = response["Header"]["GatewayRspMsg"]
-				raise @exception_mapper.map_gateway_exception(transaction_id, response_code, response_message)
-			end
+      # Gateway exception
+      if response["Header"]["GatewayRspCode"] != "0"
+        transaction_id = response["Header"]["GatewayTxnId"]
+        response_code = response["Header"]["GatewayRspCode"]
+        response_message = response["Header"]["GatewayRspMsg"]
+        raise @exception_mapper.map_gateway_exception(transaction_id, response_code, response_message)
+      end
 
-			result = Array.new
+      result = Array.new
 
       if response["Transaction"]["ReportActivity"]["Header"]["TxnCnt"] == "0"
         return result
       end
 
-			response["Transaction"]["ReportActivity"]["Details"].each { |charge|
+      response["Transaction"]["ReportActivity"]["Details"].each { |charge|
 
-				next if !filter_by.nil? and charge.serviceName != Hps.transaction_type_to_service_name(filter_by)
+        next if !filter_by.nil? and charge.serviceName != Hps.transaction_type_to_service_name(filter_by)
 
-				summary = HpsReportTransactionSummary.new()
-				summary.transaction_id = charge["GatewayTxnId"]
-				summary.original_transaction_id = charge["OriginalGatewayTxnId"]
-				summary.masked_card_number = charge["MaskedCardNbr"]
-				summary.response_code = charge["IssuerRspCode"]
-				summary.response_text = charge["IssuerRspText"]
-				summary.transaction_type = Hps.transaction_type_to_service_name(charge["ServiceName"]) if filter_by.nil? == false
+        summary = HpsReportTransactionSummary.new()
+        summary.transaction_id = charge["GatewayTxnId"]
+        summary.original_transaction_id = charge["OriginalGatewayTxnId"]
+        summary.masked_card_number = charge["MaskedCardNbr"]
+        summary.response_code = charge["IssuerRspCode"]
+        summary.response_text = charge["IssuerRspText"]
+        summary.transaction_type = Hps.transaction_type_to_service_name(charge["ServiceName"]) if filter_by.nil? == false
 
-				gw_response_code = charge["GatewayRspCode"]
-				issuer_response_code = charge["IssuerRspCode"]
+        gw_response_code = charge["GatewayRspCode"]
+        issuer_response_code = charge["IssuerRspCode"]
 
-				if gw_response_code != "0" or issuer_response_code != "00"
+        if gw_response_code != "0" or issuer_response_code != "0" or issuer_response_code != "00"
 
-					exceptions = HpsChargeExceptions.new()
+          exceptions = HpsChargeExceptions.new()
 
-					if gw_response_code != "0"
-						message = charge["GatewayRspMsg"]
-						exceptions.hps_exception = @exception_mapper.map_gateway_exception(charge["GatewayTxnId"], gw_response_code, message)
-					end
+          if gw_response_code != "0"
+            message = charge["GatewayRspMsg"]
+            exceptions.hps_exception = @exception_mapper.map_gateway_exception(charge["GatewayTxnId"], gw_response_code, message)
+          end
 
-					if issuer_response_code != "00"
-						message = charge["IssuerRspText"]
-						exceptions.card_exception = @exception_mapper.map_issuer_exception(charge["GatewayTxnId"], issuer_response_code, message)
-					end
+          if issuer_response_code != "0" || issuer_response_code != "00"
+            message = charge["IssuerRspText"]
+            exceptions.card_exception = @exception_mapper.map_issuer_exception(charge["GatewayTxnId"], issuer_response_code, message)
+          end
 
-					summary.exceptions = exceptions
+          summary.exceptions = exceptions
 
-				end
+        end
 
-				result << summary
-			}
+        result << summary
+      }
 
-			result
-		end
+      result
+    end
 
-		def charge(amount, currency, card, card_holder = nil, request_multi_use_token = false, details = nil, txn_descriptor = nil)
+    def charge(amount, currency, card, card_holder = nil, request_multi_use_token = false, details = nil, txn_descriptor = nil)
       check_amount(amount)
       check_currency(currency)
 
@@ -171,9 +171,9 @@ module Hps
       end
 
       submit_charge(xml.target!, amount, currency)
-		end
+    end
 
-		def charge_swipe(amount, currency, track_data, encryption_data = nil, gratuity = 0, allow_partial_auth = false, txn_descriptor = nil, request_multi_use_token = false, direct_market_data = nil)
+    def charge_swipe(amount, currency, track_data, encryption_data = nil, gratuity = 0, allow_partial_auth = false, txn_descriptor = nil, request_multi_use_token = false, direct_market_data = nil)
       check_amount(amount)
       check_currency(currency)
 
@@ -197,7 +197,7 @@ module Hps
       end
 
       submit_charge(xml.target!, amount, currency)
-		end
+    end
 
     def verify(card, card_holder = nil, request_multi_use_token = false, client_txn_id = nil)
 
@@ -435,16 +435,40 @@ module Hps
 
       submit_void(xml.target!)
     end
-		private
 
-		def check_amount(amount)
-			raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_amount) if amount.nil? or amount <= 0
-		end
+    def update_token_expiration(token_value, exp_month, exp_year)
+      xml = Builder::XmlMarkup.new
+      xml.hps :Transaction do
+        xml.hps :ManageTokens do
+          xml.hps :TokenValue, token_value
+          xml.hps :TokenActions do
+            xml.hps :Set do
+              xml.hps :Attribute do
+                xml.hps :Name, "ExpMonth"
+                xml.hps :Value, format('%02d', exp_month)
+              end
+              xml.hps :Attribute do
+                xml.hps :Name, "ExpYear"
+                xml.hps :Value, exp_year
+              end
+            end
+          end
+        end
+      end
 
-		def check_currency(currency)
-			raise @exception_mapper.map_sdk_exception(SdkCodes.missing_currency) if currency.empty?
-			raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_currency) unless currency.downcase.eql? "usd"
-		end
+      submit_manage_tokens(xml.target!)
+    end
+
+    private
+
+    def check_amount(amount)
+      raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_amount) if amount.nil? or amount <= 0
+    end
+
+    def check_currency(currency)
+      raise @exception_mapper.map_sdk_exception(SdkCodes.missing_currency) if currency.empty?
+      raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_currency) unless currency.downcase.eql? "usd"
+    end
 
     def hydrate_cardholder_data(card_holder)
       xml = Builder::XmlMarkup.new
@@ -671,6 +695,20 @@ module Hps
       result
     end
 
+    def submit_manage_tokens(transaction)
+      response = doTransaction(transaction)
+      header = response["Header"]
+      unless header["GatewayRspCode"].eql? "0"
+        raise @exception_mapper.map_gateway_exception(header["GatewayTxnId"], header["GatewayRspCode"], header["GatewayRspMsg"])
+      end
+
+      result = HpsManageTokens.new(hydrate_transaction_header(header))
+      result.transaction_id = header["GatewayTxnId"]
+      result.response_code = "00"
+      result.response_text = ""
+      result
+    end
+
     def process_charge_gateway_response(response_code, response_text, transaction_id, amount, currency)
 
       if !response_code.eql? "0"
@@ -719,7 +757,7 @@ module Hps
         exception.response_text = response_text
         raise exception
 
-      elsif !response_code.eql? "00"
+      elsif !response_code.eql? "00" and !response_code.eql? "0"
 
         exception = @exception_mapper.map_issuer_exception(transaction_id, response_code, response_text)
         exception.response_code = response_code
@@ -730,6 +768,6 @@ module Hps
 
     end
 
-	end
+  end
 
 end

@@ -20,7 +20,7 @@ module Hps
 
 		#protected
 
-		def doTransaction(transaction)
+		def doTransaction(transaction, client_txn_id = nil)
 
 			if configuration_invalid
       	raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_transaction_id)
@@ -48,6 +48,7 @@ module Hps
           			xml.hps :DeveloperID, self.developer_id if self.developer_id
           			xml.hps :VersionNbr, self.version_number if self.version_number
           			xml.hps :SiteTrace, self.site_trace if self.site_trace
+                xml.hps :ClientTxnId, client_txn_id if client_txn_id
               end
 
               xml << transaction
@@ -62,7 +63,15 @@ module Hps
         uri = URI.parse(self.service_uri)
         http = Net::HTTP.new uri.host, uri.port
         http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+
+        # allow SSL verification as opt-in
+        if self.http_options && self.http_options.verify_mode
+          http.verify_mode = self.http_options.verify_mode
+          http.ca_file = self.http_options.ca_file if self.http_options.ca_file
+        else
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
+
         data = xml.target!
 
         response = http.post(uri.path, data, 'Content-type' => 'text/xml')

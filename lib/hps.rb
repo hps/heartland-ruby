@@ -25,6 +25,11 @@ require "hps/entities/hps_transaction_header"
 require "hps/entities/hps_transaction_type"
 require "hps/entities/hps_transaction_details"
 require "hps/entities/hps_void"
+require "hps/entities/hps_check"
+require "hps/entities/hps_check_holder"
+require "hps/entities/hps_check_response"
+require "hps/entities/hps_check_response_details"
+require "hps/entities/hps_manage_tokens"
 
 # Infrastructure
 require "hps/infrastructure/hps_sdk_codes"
@@ -35,10 +40,18 @@ require "hps/infrastructure/card_exception"
 require "hps/infrastructure/invalid_request_exception"
 require "hps/infrastructure/hps_exception_mapper"
 require "hps/infrastructure/hps_track_data_method"
+require "hps/infrastructure/hps_account_type"
+require "hps/infrastructure/hps_check_type"
+require "hps/infrastructure/hps_data_entry_mode"
+require "hps/infrastructure/hps_sec_code"
+require "hps/infrastructure/hps_input_validation"
+require "hps/infrastructure/hps_gateway_response_validation"
+require "hps/infrastructure/hps_check_exception"
 
 # Services
 require "hps/services/hps_service"
 require "hps/services/hps_charge_service"
+require "hps/services/hps_check_service"
 require "hps/services/hps_batch_service"
 
 module Hps
