@@ -1,0 +1,7 @@
+version: '3'
+services:
+  ruby:
+    build: .
+    command: bundle exec rspec tests
+    volumes:
+      - .:/src
