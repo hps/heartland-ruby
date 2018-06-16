@@ -104,8 +104,8 @@ Note: Multi-Use tokenization is not enabled by default when creating an account.
 ## Documentation and Examples
 
  <img src="http://developer.heartlandpaymentsystems.com/Resource/Download/sdk-readme-icon-resources" align="right"/>
-  You can find the latest SDK documentation along with code examples on our [Developer Portal](http://developer.heartlandpaymentsystems.com/documentation).
-  In addition the included [test suite](http://github.hps.com/DevPortal/Ruby-SDK/tree/master/tests) can be a great source of code samples for using the SDK!
+  You can find the latest SDK documentation along with code examples on our [Developer Portal](https://developer.heartlandpaymentsystems.com/documentation).
+  In addition the included [test suite](https://github.com/hps/heartland-ruby/tree/master/tests) can be a great source of code samples for using the SDK!
 
 
 ## Testing & Certification
