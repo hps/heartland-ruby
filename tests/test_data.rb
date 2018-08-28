@@ -2,9 +2,9 @@ require 'hps'
 
 module Hps
   module TestData
-  
+
     # card holders
-  
+
     def self.valid_cardholder
       result = HpsCardHolder.new()
       result.first_name = "Bill"
@@ -17,7 +17,7 @@ module Hps
       result.address.country = "United States"
       result
     end
-  
+
     def self.cert_cardholder_shortzip
       result = HpsCardHolder.new()
       result.first_name = "Bill"
@@ -27,10 +27,10 @@ module Hps
       result.address.city = "Irvine"
       result.address.state = "TX"
       result.address.zip = "75024"
-      result.address.country = "United States"    
-      result    
+      result.address.country = "United States"
+      result
     end
-  
+
     def self.cert_cardholder_shortzip_no_street
       result = HpsCardHolder.new()
       result.first_name = "Bill"
@@ -39,10 +39,10 @@ module Hps
       result.address.city = "Irvine"
       result.address.state = "TX"
       result.address.zip = "75024"
-      result.address.country = "United States"    
-      result    
+      result.address.country = "United States"
+      result
     end
-  
+
     def self.cert_cardholder_longzip
       result = HpsCardHolder.new()
       result.first_name = "Bill"
@@ -52,10 +52,10 @@ module Hps
       result.address.city = "Irvine"
       result.address.state = "TX"
       result.address.zip = "750241234"
-      result.address.country = "United States"    
-      result    
+      result.address.country = "United States"
+      result
     end
-  
+
     def self.cert_cardholder_longzip_no_street
       result = HpsCardHolder.new()
       result.first_name = "Bill"
@@ -64,12 +64,12 @@ module Hps
       result.address.city = "Irvine"
       result.address.state = "TX"
       result.address.zip = "750241234"
-      result.address.country = "United States"    
-      result    
+      result.address.country = "United States"
+      result
     end
-  
+
     # credit cards
-  
+
     def self.valid_visa
       result = HpsCreditCard.new
       result.cvv = 123
@@ -78,7 +78,7 @@ module Hps
       result.number = 4012002000060016
       result
     end
-  
+
     def self.valid_mastercard
       result = HpsCreditCard.new
       result.cvv = 123
@@ -87,7 +87,7 @@ module Hps
       result.number = 5473500000000014
       result
     end
-  
+
     def self.valid_discover
       result = HpsCreditCard.new
       result.cvv = 123
@@ -96,7 +96,7 @@ module Hps
       result.number = 6011000990156527
       result
     end
-  
+
     def self.valid_amex
       result = HpsCreditCard.new
       result.cvv = 1234
@@ -105,7 +105,7 @@ module Hps
       result.number = 372700699251018
       result
     end
-  
+
     def self.valid_jcb
       result = HpsCreditCard.new
       result.cvv = 123
@@ -114,7 +114,7 @@ module Hps
       result.number = 3566007770007321
       result
     end
-  
+
     def self.invalid_card
       result = HpsCreditCard.new
       result.cvv = 123
@@ -128,11 +128,11 @@ module Hps
     #  = Giftcards =
     #  =============
     TEST_CARD_NUMBERS = (6277200000000001..6277200000000099)
-    
+
     def self.valid_gift_card_not_encrypted(random = true)
       return HpsGiftCard.new(Random.rand(TEST_CARD_NUMBERS)) if random
       return HpsGiftCard.new(TEST_CARD_NUMBERS.first) if !random
     end # valid_gift_card_not_encrypted
-  
+
   end
 end

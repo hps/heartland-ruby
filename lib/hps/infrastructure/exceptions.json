@@ -1,80 +1,80 @@
 {
    "version": "1.0.1",
-   
+
    "exception_mappings":[
       {
-         "object":"exception_mapping",
-         "category":"gift",
-         "exception_codes":[
+        "object":"exception_mapping",
+        "category":"gift",
+        "exception_codes":[
             "3",
             "8"
-         ],
-         "mapping_type":"CardException",
-         "mapping_code":"invalid_card_data",
-         "mapping_message":"Exception_Message_InvalidCardData"
+        ],
+        "mapping_type":"CardException",
+        "mapping_code":"invalid_card_data",
+        "mapping_message":"Exception_Message_InvalidCardData"
       },
       {
-         "object":"exception_mapping",
-         "category":"gift",
-         "exception_codes":[
+        "object":"exception_mapping",
+        "category":"gift",
+        "exception_codes":[
             "4"
-         ],
-         "mapping_type":"CardException",
-         "mapping_code":"expired_card",
-         "mapping_message":"Exception_Message_CardExpired"
+        ],
+        "mapping_type":"CardException",
+        "mapping_code":"expired_card",
+        "mapping_message":"Exception_Message_CardExpired"
       },
       {
-         "object":"exception_mapping",
-         "category":"gift",
-         "exception_codes":[
+        "object":"exception_mapping",
+        "category":"gift",
+        "exception_codes":[
             "5",
             "12"
-         ],
-         "mapping_type":"CardException",
-         "mapping_code":"card_declined",
-         "mapping_message":"Exception_Message_CardDeclined"
+        ],
+        "mapping_type":"CardException",
+        "mapping_code":"card_declined",
+        "mapping_message":"Exception_Message_CardDeclined"
       },
       {
-         "object":"exception_mapping",
-         "category":"gift",
-         "exception_codes":[
+        "object":"exception_mapping",
+        "category":"gift",
+        "exception_codes":[
             "6",
             "7",
             "10"
-         ],
-         "mapping_type":"CardException",
-         "mapping_code":"processing_error",
-         "mapping_message":"Exception_Message_ProcessingError"
+        ],
+        "mapping_type":"CardException",
+        "mapping_code":"processing_error",
+        "mapping_message":"Exception_Message_ProcessingError"
       },
       {
-         "object":"exception_mapping",
-         "category":"gift",
-         "exception_codes":[
+        "object":"exception_mapping",
+        "category":"gift",
+        "exception_codes":[
             "9"
-         ],
-         "mapping_type":"CardException",
-         "mapping_code":"invalid_amount",
-         "mapping_message":"Exception_Message_ChargeAmount"
+        ],
+        "mapping_type":"CardException",
+        "mapping_code":"invalid_amount",
+        "mapping_message":"Exception_Message_ChargeAmount"
       },
       {
-         "object":"exception_mapping",
-         "category":"gift",
-         "exception_codes":[
+        "object":"exception_mapping",
+        "category":"gift",
+        "exception_codes":[
             "13"
-         ],
-         "mapping_type":"CardException",
-         "mapping_code":"partial_approval",
-         "mapping_message":"Exception_Message_PartialApproval"
+        ],
+        "mapping_type":"CardException",
+        "mapping_code":"partial_approval",
+        "mapping_message":"Exception_Message_PartialApproval"
       },
       {
-         "object":"exception_mapping",
-         "category":"gift",
-         "exception_codes":[
+        "object":"exception_mapping",
+        "category":"gift",
+        "exception_codes":[
             "14"
-         ],
-         "mapping_type":"CardException",
-         "mapping_code":"invalid_pin",
-         "mapping_message":"Exception_Message_InvalidPin"
+        ],
+        "mapping_type":"CardException",
+        "mapping_code":"invalid_pin",
+        "mapping_message":"Exception_Message_InvalidPin"
       },
       {
          "object":"exception_mapping",
@@ -406,6 +406,11 @@
          "mapping_type":"CardException",
          "mapping_code":"processing_error",
          "mapping_message":"Exception_Message_ProcessingError"
+      },
+      {
+         "object":"exception_message",
+         "code":"Exception_Message_PartialApproval",
+         "message":"The amount was partially approved."
       }
    ],
    "exception_messages":[
@@ -538,11 +543,6 @@
          "object":"exception_message",
          "code":"Exception_Message_UnableToReverseTransactionAfterIssuerTimeout",
          "message":"Error occurred while reversing a charge due to issuer time-out."
-      },
-      {
-         "object":"exception_message",
-         "code":"Exception_Message_PartialApproval",
-         "message":"The amount was partially approved."
       }
    ]
 }

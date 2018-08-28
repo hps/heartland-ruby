@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Ruby SDK for processing payments via Portico Gateway}
   spec.summary       = %q{Heartland Payment Systems - Portico Gateway SDK}
   spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.license       = "GPL-2.0"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
@@ -23,5 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "pry"
   spec.add_dependency('builder', '>= 2.1.2', '< 4.0.0')
-  spec.add_dependency('activesupport', '>= 2.3.14', '<= 5.0.1')  
+  spec.add_dependency('activesupport', '>= 2.3.14', '<= 5.0.1')
 end

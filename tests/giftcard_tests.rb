@@ -204,7 +204,7 @@ end # Giftcard Tests
 
 # Helper methods
 def message_for_code(code)
-  mapping = @mapper.exceptions["exception_messages"].detect { |message| 
+  mapping = @mapper.exceptions["exception_messages"].detect { |message|
     message["code"] == code
   }
 

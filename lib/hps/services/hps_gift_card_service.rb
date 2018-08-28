@@ -234,7 +234,7 @@ module Hps
           elsif gift_card.token_value
             xml.hps :TokenValue, gift_card.token_value
           end
-        
+
           if gift_card.encryption_data
             hydrate_encryption_data(gift_card.encryption_data, xml)
           end

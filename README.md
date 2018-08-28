@@ -15,32 +15,39 @@ This SDK makes it easy to integrate your Ruby application with Heartland's [**Po
 
 Supported Gateway Calls
 
+* BatchClose
 * CheckSale
 * CheckVoid
-* CreditAccountVerify (4.3)
-* CreditAddToBatch (4.4)
-* CreditAuth (4.5)
-* CreditReturn (4.9)
-* CreditReversal (4.10)
-* CreditSale (4.11) 
-* ReportActivity (10.4)
-* ReportTxnDetail (10.8)
-* BatchClose (10.3)
-
+* CreditAccountVerify
+* CreditAddToBatch
+* CreditAuth
+* CreditReturn
+* CreditReversal
+* CreditSale
+* GiftCardActivate
+* GiftCardAddValue
+* GiftCardAlias
+* GiftCardBalance
+* GiftCardDeactivate
+* GiftCardReplace
+* GiftCardReward
+* GiftCardSale
+* GiftCardVoid
+* GiftCardReversal
+* ReportActivity
+* ReportTxnDetail
 
 |  <a href="#data-security"><b>Data Security</b></a> | <a href="#api-reference"><b>API Reference</b></a>  |  <a href="#testing--certification"><b>Testing & Certification</b></a> | <a href="#api-keys">API Keys</a> | Links |
 |:--:|:--:|:--:|:--:|:--|
 | [![](http://developer.heartlandpaymentsystems.com/Resource/Download/sdk-readme-icon-secure)](#data-security)  | [![](http://developer.heartlandpaymentsystems.com/Resource/Download/sdk-readme-icon-resources)](#documentation-and-examples)  | [![](http://developer.heartlandpaymentsystems.com/Resource/Download/sdk-readme-icon-tools)](#certification--testing) | [![](http://developer.heartlandpaymentsystems.com/Resource/Download/sdk-readme-icon-keys)](#api-keys) | <a href="http://developer.heartlandpaymentsystems.com/Account/Register" target="_blank">Register an Account</a> <br> <a href="http://www.heartlandpaymentsystems.com/partners/" target="_blank">Partner with Heartland</a> <br> <a href="http://developer.heartlandpaymentsystems.com/SecureSubmit/Support" target="_blank">Developer Support</a>  |
 
-
 #### Developer Support
 
 You are not alone! If you have any questions while you are working through your development process, please feel free to <a href="mailto:entapp_devportal@e-hps.com?Subject=Developer Support Request">reach out to our team for assistance</a>.
 
-
 ## Requirements
-Ruby 2.3+
 
+Ruby 2.3+
 
 ## Installation
 
@@ -55,7 +62,6 @@ You can also use [Bundler Gemfiles](http://bundler.io/v1.5/gemfile.html) to have
 And then run Bundler :
 
 > Bundler
-
 
 ## API Keys
 
@@ -72,41 +78,33 @@ Note: Multi-Use tokenization is not enabled by default when creating an account.
 
 ## Data Security
 
- <img src="http://developer.heartlandpaymentsystems.com/Resource/Download/sdk-readme-icon-secure" align="right"/>
- If your app stores, processes, or transmits cardholder data in cleartext then it is in-scope for PA-DSS. If your app is hosted, or the data in question otherwise comes into your organization, then the app and your entire company are in-scope for PCI DSS (either as a merchant or a service provider). Heartland offers a suite of solutions to help keep integrators' applications and/or environments shielded from cardholder data, whether at motion or at rest.
+<img src="http://developer.heartlandpaymentsystems.com/Resource/Download/sdk-readme-icon-secure" align="right"/>
+If your app stores, processes, or transmits cardholder data in cleartext then it is in-scope for PA-DSS. If your app is hosted, or the data in question otherwise comes into your organization, then the app and your entire company are in-scope for PCI DSS (either as a merchant or a service provider). Heartland offers a suite of solutions to help keep integrators' applications and/or environments shielded from cardholder data, whether at motion or at rest.
 
- * **Secure Submit** for eCommerce web or mobile applications ("card-not-present"), which leverages single-use tokenization to prevent card data from passing through the merchant or integrator's webserver. It only requires a simple JavaScript inclusion and provides two options for payment field hosting:
+- **Secure Submit** for eCommerce web or mobile applications ("card-not-present"), which leverages single-use tokenization to prevent card data from passing through the merchant or integrator's webserver. It only requires a simple JavaScript inclusion and provides two options for payment field hosting:
+	- **Self-Hosted Fields** - this approach relies upon the standard, appropriately named, HTML form controls on the integrator's served web page.
+	- **Heartland Hosted Fields** - this approach combines the Secure Submit service with iframes to handle presentation of the form fields and collection of sensitive data on Heartland servers. Since PCI version 3.1 the PCI Council and many QSAs advocate the iframe-based approach as enabling a merchant to more readily achieve PCI compliance via the simplified SAQ-A form. Check out the CoalFire's [whitepaper](http://developer.heartlandpaymentsystems.com/Resource/Download/coalfire-white-paper) for more information.
+- **Heartland Secure** for card-present retailers, hospitality, and other "POS" applications, comprises three distinct security technologies working in concert:
+	- **End-to-End Encryption** (E3) - combines symmetric and asymmetric cryptography to form an "Identity-Based Encryption" methodology which keeps cardholder data encrypted from the moment of the swipe.
+	- **Tokenization** - replaces sensitive data values with non-sensitive representations which may be stored for recurring billing, future orders, etc.
+	- **EMV** - though less about data security and more about fraud prevention, EMV or chip card technology guarantees the authenticity of the payment card and is thus an important concern for retailers.
 
-  * **Self-Hosted Fields** - this approach relies upon the standard, appropriately named, HTML form controls on the integrator's served web page.
+Depending on your (or your customers') payment acceptance environment, you may need to support one or more of these technologies in addition to this SDK. This SDK also supports the ability to submit cleartext card numbers as input, but any developer who does so will be expected to demonstrate compliance with PA-DSS. Likewise any third party integrator who is planning on handling cleartext card data on behalf of other merchants will be expected to demonstrate their PCI DSS compliance as a Service Provider prior to completing certification with Heartland.
 
-  - **Heartland Hosted Fields** - this approach combines the Secure Submit service with iframes to handle presentation of the form fields and collection of sensitive data on Heartland servers. Since PCI version 3.1 the PCI Council and many QSAs advocate the iframe-based approach as enabling a merchant to more readily achieve PCI compliance via the simplified SAQ-A form. Check out the CoalFire's [whitepaper](http://developer.heartlandpaymentsystems.com/Resource/Download/coalfire-white-paper) for more information.
+If you implement Secure Submit tokenization for your web or mobile application you will never have to deal with handling a card number - Heartland will take care of it for you and return a token to initiate the charge from your servers.
 
- - **Heartland Secure** for card-present retailers, hospitality, and other "POS" applications, comprises three distinct security technologies working in concert:
-  - **End-to-End Encryption** (E3) - combines symmetric and asymmetric cryptography to form an "Identity-Based Encryption" methodology which keeps cardholder data encrypted from the moment of the swipe.
+Similarly, if you implement Heartland Secure with E3 (for both swiped and keyed entry methods) then your POS application will be out-of-scope for PA-DSS. Heartland Secure certified devices will only ever return E3 encrypted data which can safely be passed through your systems as input to this SDK. Heartland Secure devices include many popular models manufactured by PAX and Ingenico.
 
-  - **Tokenization** - replaces sensitive data values with non-sensitive representations which may be stored for recurring billing, future orders, etc.
+To summarize, when you create a payment method using this SDK you have the following options for securely avoiding interaction with sensitive cardholder data:
 
-  - **EMV** - though less about data security and more about fraud prevention, EMV or chip card technology guarantees the authenticity of the payment card and is thus an important concern for retailers.
-
- Depending on your (or your customers') payment acceptance environment, you may need to support one or more of these technologies in addition to this SDK. This SDK also supports the ability to submit cleartext card numbers as input, but any developer who does so will be expected to demonstrate compliance with PA-DSS. Likewise any third party integrator who is planning on handling cleartext card data on behalf of other merchants will be expected to demonstrate their PCI DSS compliance as a Service Provider prior to completing certification with Heartland.
-
- If you implement Secure Submit tokenization for your web or mobile application you will never have to deal with handling a card number - Heartland will take care of it for you and return a token to initiate the charge from your servers.
-
- Similarly, if you implement Heartland Secure with E3 (for both swiped and keyed entry methods) then your POS application will be out-of-scope for PA-DSS. Heartland Secure certified devices will only ever return E3 encrypted data which can safely be passed through your systems as input to this SDK. Heartland Secure devices include many popular models manufactured by PAX and Ingenico.
-
- To summarize, when you create a payment method using this SDK you have the following options for securely avoiding interaction with sensitive cardholder data:
-
- - Card data (track or PAN) may be sent directly from a web browser to Heartland, returning a SecureSubmit single use token that is then sent to your server.
-
- - Encrypted card data (track or PAN) may be obtained directly from a Heartland Secure device and passed to the SDK
-
+- Card data (track or PAN) may be sent directly from a web browser to Heartland, returning a SecureSubmit single use token that is then sent to your server.
+- Encrypted card data (track or PAN) may be obtained directly from a Heartland Secure device and passed to the SDK
 
 ## Documentation and Examples
 
- <img src="http://developer.heartlandpaymentsystems.com/Resource/Download/sdk-readme-icon-resources" align="right"/>
-  You can find the latest SDK documentation along with code examples on our [Developer Portal](http://developer.heartlandpaymentsystems.com/documentation).
-  In addition the included [test suite](http://github.hps.com/DevPortal/Ruby-SDK/tree/master/tests) can be a great source of code samples for using the SDK!
-
+<img src="http://developer.heartlandpaymentsystems.com/Resource/Download/sdk-readme-icon-resources" align="right"/>
+You can find the latest SDK documentation along with code examples on our [Developer Portal](http://developer.heartlandpaymentsystems.com/documentation).
+In addition the included [test suite](http://github.hps.com/DevPortal/Ruby-SDK/tree/master/tests) can be a great source of code samples for using the SDK!
 
 ## Testing & Certification
 
@@ -186,13 +184,14 @@ During your integration you will want to test for specific issuer responses such
 
 ```ruby
 begin
-    credit_service.charge(-5, 'usd', credit_card, card_holder)
+	credit_service.charge(-5, 'usd', credit_card, card_holder)
 rescue HpsInvalidRequestException => e
-    # handle error for amount less than zero dollars
+	# handle error for amount less than zero dollars
 rescue HpsAuthenticationException => e
-    # handle errors related to your HpsServiceConfig
-except HpsCreditException => e
-    # handle card-related exceptions: card declined, processing error, etc
+	# handle errors related to your HpsServiceConfig
+rescue HpsCreditException => e
+	# handle card-related exceptions: card declined, processing error, etc
+end
 ````
 
 More exceptions can be found [here](https://github.com/hps/heartland-ruby/tree/master/lib/hps/infrastructure).
@@ -212,5 +211,3 @@ All our code is open sourced and we encourage fellow developers to contribute an
 #### Included Test Suite
 
 The included test suite can help ensure your contribution doesn't cause unexpected errors and is a terrific resource of working examples that you can reference. As mentioned earlier, the [certification folder](http://github.hps.com/DevPortal/Ruby-SDK/blob/master/tests/cert_tests.rb) contains tests that mirror the types of requirements you will encounter when you certify your integration for production.
-
-

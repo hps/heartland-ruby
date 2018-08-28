@@ -102,7 +102,7 @@ module Hps
 
     def self.from_response(response, txn_type)
       transaction = response['Transaction']
-      
+
       sale = self.superclass.from_response(response, txn_type, self.name)
 
       sale.split_tender_card_amount = transaction['SplitTenderCardAmt']

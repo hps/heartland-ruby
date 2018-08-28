@@ -7,7 +7,7 @@ module Hps
 
 		def initialize
 			path = File.join( File.dirname(__FILE__), "exceptions.json")
-			
+
 			File.open(path, "r") do |f|
 				@exceptions = JSON.load(f)
 			end
@@ -23,8 +23,8 @@ module Hps
 
 			unless mapping.nil?
 				message = message_for_mapping(mapping, response_text)
-				code = mapping["mapping_code"]			
-				return CardException.new(transaction_id, code, message)				
+				code = mapping["mapping_code"]
+				return CardException.new(transaction_id, code, message)
 			else
 				return CardException.new(transaction_id, "unknown_card_exception", response_text)
 			end
@@ -32,24 +32,24 @@ module Hps
 		end
 
 		def map_gift_card_exception(transaction_id, response_code, response_text)
-			mapping = exception_for_category_and_code("gift", response_code)
-			unless mapping.nil?
-				message = message_for_mapping(mapping, response_text)
-				code = mapping["mapping_code"]
-				return CardException.new(transaction_id, code, message)
-			else
-				return CardException.new(transaction_id, "unknown_card_exception", response_text)
-			end
-		end
+		 mapping = exception_for_category_and_code("gift", response_code)
+		 unless mapping.nil?
+			 message = message_for_mapping(mapping, response_text)
+			 code = mapping["mapping_code"]
+			 return CardException.new(transaction_id, code, message)
+		 else
+			 return CardException.new(transaction_id, "unknown_card_exception", response_text)
+		 end
+	 end
 
 		def map_gateway_exception(transaction_id, response_code, response_text)
 
 			mapping = exception_for_category_and_code("gateway", response_code)
 			message = message_for_mapping(mapping, response_text)
-      
+
 			unless mapping.nil?
 
-				code = mapping["mapping_code"]	
+				code = mapping["mapping_code"]
 				exception_type = mapping["mapping_type"]
 
 				if exception_type == "AuthenticationException"
@@ -63,10 +63,10 @@ module Hps
 				elsif exception_type == "InvalidRequestException"
 
 					return InvalidRequestException.new(message, mapping["param"], code)
-				
+
 				elsif !code.nil?
 
-					return HpsException.new(response_text, code)			
+					return HpsException.new(response_text, code)
 
 				end
 
@@ -89,8 +89,8 @@ module Hps
 			unless mapping.nil?
 
 					message = message_for_mapping(mapping, response_text)
-					code = mapping["mapping_code"]	
-					exception_type = mapping["mapping_type"]	
+					code = mapping["mapping_code"]
+					exception_type = mapping["mapping_type"]
 
 					if exception_type == "InvalidRequestException"
 
@@ -99,12 +99,12 @@ module Hps
 					elsif exception_type == "ApiConnectionException"
 
 						return ApiConnectionException.new(message, inner_exception, code)
-					
+
 					elsif !code.nil?
 
-						return HpsException.new(message, code)			
+						return HpsException.new(message, code)
 
-					end						
+					end
 
 			end
 
@@ -122,7 +122,7 @@ module Hps
 
 			unless message.nil?
 
-				mapping_message = @exceptions["exception_messages"].detect { |m| 			
+				mapping_message = @exceptions["exception_messages"].detect { |m|
 					m["code"] == message
 				}
 
@@ -136,8 +136,8 @@ module Hps
 
 		def exception_for_category_and_code(category, code)
 
-			@exceptions["exception_mappings"].detect { |m| 
-				m["category"] == category and m["exception_codes"].include?(code.to_s) 
+			@exceptions["exception_mappings"].detect { |m|
+				m["category"] == category and m["exception_codes"].include?(code.to_s)
 			}
 
 		end
