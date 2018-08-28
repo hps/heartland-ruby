@@ -112,5 +112,68 @@ module Hps
       end
     end
 
+    #  =============
+    #  = Giftcards =
+    #  =============
+    def self.balance_valid_gift_card
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.balance( TestData.valid_gift_card_not_encrypted )
+    end # balance_valid_gift_card
+
+    def self.activate_valid_gift_card(amount)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.activate( TestData.valid_gift_card_not_encrypted, amount, 'USD' )
+    end # activate_valid_gift_card
+
+    def self.add_value_to_valid_gift_card(amount)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.add_value( TestData.valid_gift_card_not_encrypted, amount, 'USD' )
+    end # add_value_to_valid_gift_card
+
+    def self.deactivate_valid_gift_card
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.deactivate( TestData.valid_gift_card_not_encrypted )
+    end # deactivate_valid_gift_card
+
+    def self.replace_valid_gift_card
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.replace( TestData.valid_gift_card_not_encrypted, TestData.valid_gift_card_not_encrypted )
+    end # replace_valid_gift_card
+
+    def self.reward_valid_gift_card(amount, currency = "USD", gratuity = nil, tax = nil)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.reward( TestData.valid_gift_card_not_encrypted, amount, 'USD', gratuity, tax )
+    end # reward_valid_gift_card
+
+    def self.sale_valid_gift_card(amount, currency = "USD", gratuity = nil, tax = nil, random_card = true)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.sale( TestData.valid_gift_card_not_encrypted(random_card), amount, currency, gratuity, tax)
+    end # sale_valid_gift_card
+
+    def self.void_gift_card_sale(txn_id)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.void( txn_id )
+    end # void_gift_card_sale
+
+    def self.reverse_gift_card_sale(amount, txn_id = TestData.valid_gift_card_not_encrypted(false))
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.reverse( txn_id, amount )
+    end # reverse_gift_card_sale
+
+    # Testing exceptions from transactions
+    def self.gift_card_transaction_exception(amount, method = :sale)
+      TestHelper.valid_multi_use_config
+      service = Hps::HpsGiftCardService.new
+      service.send(method, TestData.valid_gift_card_not_encrypted, amount )
+    end # gift_card_sale_with_invaid_pin
   end
 end
