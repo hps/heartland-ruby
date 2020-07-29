@@ -2,12 +2,6 @@ require File.join( File.dirname(__FILE__), "test_helper" )
 
 describe "Certification Tests" do
   
-  RSpec.configure do |config|
-    config.order_groups_and_examples do |tests|
-      tests.sort_by { |test| test.description }
-    end
-  end
-  
 	before(:each) do
     Hps::TestHelper.configure_hps_module_for_certification()
 		@service = Hps::HpsChargeService.new()
