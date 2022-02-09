@@ -141,7 +141,7 @@ module Hps
     def charge(amount, currency, card, card_holder = nil, request_multi_use_token = false, details = nil, txn_descriptor = nil)
       check_amount(amount)
       check_currency(currency)
-
+      binding.pry
       xml = Builder::XmlMarkup.new
       xml.hps :Transaction do
         xml.hps :CreditSale do

@@ -4,53 +4,51 @@ require 'rubygems'
 require 'json'
 
 module Hps
-  class HpsTokenService
-    attr_accessor :public_api_key, :url
+  class HpsTokenService < HpsService
 
-    def initialize(public_api_key)
-      @public_api_key = public_api_key
-      if @public_api_key.nil? || @public_api_key.eql?('')
-        raise HpsException.new('Public Key Not Found', '0')
+    def tokenize_card(card)
+      xml = Builder::XmlMarkup.new
+      xml.hps :Transaction do
+        xml.hps :Tokenize do
+          xml.hps :Block1 do
+            xml.hps :CardData do
+              xml.hps :ManualEntry do
+                xml.hps :CardNbr, card.number
+                xml.hps :ExpMonth, card.exp_month
+                xml.hps :ExpYear, card.exp_year
+                xml.hps :CVV2, card.cvv
+                xml.hps :CardPresent, card.card_present ? "Y" : "N"
+                xml.hps :ReaderPresent, card.reader_present ? "Y" : "N"
+              end
+              xml.hps :TokenRequest, 'Y'
+            end
+          end
+        end
       end
 
-      components = @public_api_key.split '_'
-      if components.size  < 3
-        raise HpsException.new('Public API Key must contain at least two underscores','0')
-      end
-
-      if components[1].downcase.eql? 'prod'
-        @url = 'https://api2.heartlandportico.com/SecureSubmit.v1/api/token'
-      else
-        @url = 'https://cert.api2.heartlandportico.com/Hps.Exchange.PosGateway.Hpf.v1/api/token'
-      end
-
+      tokenize(xml.target!)
     end
 
-    def get_token(card_data)
-      data = {
-          'api_key' => @public_api_key,
-          'object' => 'token',
-          'token_type' => 'supt',
-          '_method' => 'post',
-          'card[number]' => card_data.number,
-          'card[cvv]' => card_data.cvv,
-          'card[exp_month]' => card_data.exp_month,
-          'card[exp_year]' => card_data.exp_year
-      }
-      get_result = get(data)
-      JSON.parse(get_result)
+    def tokenize(transaction)
+      response = doTransaction(transaction)
+
+      response
     end
 
-    def get(data)
-      begin
-        uri = URI(@url)
-        uri.query = URI.encode_www_form(data)
-        res = Net::HTTP.get_response(uri)
-        res.body
-
-      rescue Exception => e
-        raise HpsException.new(e.message,'0')
-      end
-    end
   end
 end
+
+
+# initiate token service client
+#
+# client = Hps::HpsTokenService.new("skapi_cert_MUeyBQAX128AlmCXpiY3kknHjlU6fN0iGFBpP7uGsQ") < this is my secret api key from heartland (non-prod)
+#
+# create card with card info
+#
+# card = Hps::HpsCreditCard.new
+# card.number = '4111111111111111'
+# card.cvv = '123'
+# card.exp_month = '02'
+# card.exp_year = '2023'
+#
+# 

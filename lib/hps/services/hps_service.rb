@@ -22,10 +22,9 @@ module Hps
 
 		def doTransaction(transaction, client_txn_id = nil)
 
-			if configuration_invalid
-      	raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_transaction_id)
-			end
-
+			# if configuration_invalid
+      # 	raise @exception_mapper.map_sdk_exception(SdkCodes.invalid_transaction_id)
+			# end
       xml = Builder::XmlMarkup.new
       xml.instruct!(:xml, :encoding => "UTF-8")
       xml.SOAP :Envelope, {
