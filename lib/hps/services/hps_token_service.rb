@@ -51,4 +51,4 @@ end
 # card.exp_month = '02'
 # card.exp_year = '2023'
 #
-# 
+# client.tokenize_card(card)
