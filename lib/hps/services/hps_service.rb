@@ -1,4 +1,6 @@
 require 'active_support/core_ext/hash/conversions'
+require 'active_support/isolated_execution_state'
+require 'active_support/xml_mini'
 
 module Hps
 	class HpsService
