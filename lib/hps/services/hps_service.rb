@@ -49,6 +49,7 @@ module Hps
           			xml.hps :VersionNbr, self.version_number if self.version_number
           			xml.hps :SiteTrace, self.site_trace if self.site_trace
                 xml.hps :ClientTxnId, client_txn_id if client_txn_id
+                xml.hps :SDKNameVersion, 'ruby;version=2.3.3'
               end
 
               xml << transaction
