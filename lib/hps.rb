@@ -55,6 +55,7 @@ require "hps/services/hps_charge_service"
 require "hps/services/hps_check_service"
 require "hps/services/hps_batch_service"
 require "hps/services/hps_gift_card_service"
+require "hps/services/hps_token_service"
 
 module Hps
 
