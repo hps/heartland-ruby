@@ -1,3 +1,7 @@
+if ActiveSupport::VERSION::MAJOR > 6
+  require "active_support/isolated_execution_state"
+end
+
 require 'active_support/core_ext/hash/conversions'
 
 module Hps
