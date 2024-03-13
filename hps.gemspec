@@ -18,10 +18,11 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.3"
+  spec.add_development_dependency "bundler", "~> 2.5.6"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "pry"
   spec.add_dependency('builder', '>= 2.1.2', '< 4.0.0')
-  spec.add_dependency('activesupport', '>= 2.3.14', '<= 5.0.1')
+  spec.add_dependency('activesupport', '>= 2.3.14', '<= 7.1.3')
+  spec.add_dependency('rexml', '~> 3.2', '>= 3.2.4')
 end
